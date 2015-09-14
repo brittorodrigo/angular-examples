@@ -1,0 +1,40 @@
+<!doctype html>
+<html ng-app="myApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script src="controllers.js"></script>
+  <body>
+      
+      <div>
+          <input type="search" ng-model="search">
+      </div>
+
+      <div ng-controller="ListController as list">
+        <ul>
+            <li ng-repeat="person in list.people | filter:search">
+                {{person.name}} : {{person.age}}
+                <button ng-click="list.remove($index)">x</button>
+            </li>
+        </ul> 
+
+        <div>
+          <label>Name: </label><input ng-model="person.name">
+          <br>
+          <label>Age: </label><input ng-model="person.age">
+          <br>
+          <button ng-click="list.add(person)"> Add person</button>
+        </div>
+        <hr>
+        <div>
+           <select ng-model="selected_person" 
+                ng-options="person.name group by person.age for person in list.people | filter:search"> 
+              <option value="">Choose a person</option>
+          </select>
+          {{selected_person.name}} 
+        </div>
+       
+      </div>
+
+  </body>
+  
+</html>
