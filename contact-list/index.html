@@ -1,0 +1,61 @@
+<html ng-app="contactsList">
+<head>
+	<meta charset="UTF-8">
+	<title>My Contacts List</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body ng-controller="contactsListCtrl">
+	<div class="jumbotron">
+		<h3>{{app}}</h3>
+		<table ng-show="contacts.length > 0" class="table">
+			<tr>
+				<th></th>
+				<th>Name</th>
+				<th>Phone</th>
+				<th>Network</th>
+				<th></th>
+			</tr>
+			<tr ng-class="{'isSelected bold': contact.isSelected}" ng-repeat="contact in contacts">
+				<td><input type="checkbox" ng-model="contact.isSelected"/></td>
+				<td>{{contact.name}}</td>
+				<td>{{contact.phone}}</td>
+				<td>{{contact.network.name}}</td>
+				<td><div style="width: 20px; height: 20px;" ng-style="{'background-color': contact.color}"></div></td>
+			</tr>
+		</table>
+		<hr/>
+		<form name="contactForm">
+			<input class="form-control" type="text" ng-model="contact.name" name="name" placeholder="name" ng-required="true" ng-minlength="10"/>
+			<input class="form-control" type="text" ng-model="contact.phone" name="phone" placeholder="phone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/"/>
+			<select class="form-control" ng-model="contact.network" ng-options="network.name group by network.category for network in networks">
+				<option value="">Select a network</option>
+			</select>
+		</form>
+
+		<div ng-messages="contactForm.name.$error" ng-if="contactForm.name.$dirty" 
+			class="alert alert-danger">
+			<div ng-message="required">
+				Por favor, preencha o campo name!
+			</div>
+			<div ng-message="minlength">
+				O campo name deve ter no mínimo 10 caracteres.
+			</div>
+		</div>
+
+		<div ng-show="contactForm.phone.$error.required && contactForm.phone.$dirty" class="alert alert-danger">
+			Por favor, preencha o campo phone!
+		</div>
+		<div ng-show="contactForm.phone.$error.pattern" class="alert alert-danger">
+			O campo phone deve ter o formato DDDDD-DDDD.
+		</div>
+		<button class="btn btn-primary btn-block" ng-click="addContact(contact)" ng-disabled="contactForm.$invalid">Add contact</button>
+		<button class="btn btn-danger btn-block" ng-click="deleteContacts(contacts)" 
+				ng-if="	isContactSelected(contacts)">Delete contacts</button>
+	</div>
+
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular/angular-messages.js"></script>
+	<script src="js/controllers.js"></script>
+</body>
+</html>
